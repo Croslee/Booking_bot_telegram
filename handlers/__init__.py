@@ -31,7 +31,7 @@ from handlers.menu import (
     handle_size,
 )
 from handlers.qr_handler import send_qr
-from handlers.seller import cmd_export, cmd_history, cmd_stats, handle_order_action
+from handlers.seller import cmd_export, cmd_history, cmd_reload_menu, cmd_stats, handle_order_action
 from handlers.start import show_categories, start
 
 __all__ = [
@@ -65,5 +65,6 @@ __all__ = [
     "cmd_history",
     "cmd_stats",
     "cmd_export",
+    "cmd_reload_menu",
     "handle_order_action",
 ]

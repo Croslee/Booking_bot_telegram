@@ -34,6 +34,7 @@ from handlers import (
     clear_cart,
     cmd_export,
     cmd_history,
+    cmd_reload_menu,
     cmd_stats,
     collect_address,
     collect_name,
@@ -235,9 +236,10 @@ def main() -> None:
     # group=-1 đảm bảo chạy trước ConversationHandler
     app.add_handler(CommandHandler("qr",       send_qr),           group=-1)
     app.add_handler(CommandHandler("help",     help_command),      group=-1)
-    app.add_handler(CommandHandler("history",  cmd_history),       group=-1)
-    app.add_handler(CommandHandler("stats",    cmd_stats),         group=-1)
-    app.add_handler(CommandHandler("export",   cmd_export),        group=-1)
+    app.add_handler(CommandHandler("history",     cmd_history),       group=-1)
+    app.add_handler(CommandHandler("stats",       cmd_stats),         group=-1)
+    app.add_handler(CommandHandler("export",      cmd_export),        group=-1)
+    app.add_handler(CommandHandler("reloadmenu",  cmd_reload_menu),   group=-1)
 
     # ── Callback từ seller: xác nhận / huỷ đơn ──
     # Phải đăng ký group=-1 để không bị ConversationHandler chặn

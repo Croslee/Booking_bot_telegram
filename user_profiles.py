@@ -7,13 +7,16 @@ File: user_profiles.json  (dict: user_id_str → {name, phone, address})
 import json
 import logging
 import os
+import threading
 from typing import Optional
 
+from config import DATA_DIR
 from models import DeliveryInfo
 
 logger = logging.getLogger(__name__)
 
-PROFILES_FILE = os.path.join(os.path.dirname(__file__), "user_profiles.json")
+PROFILES_FILE = os.path.join(DATA_DIR, "user_profiles.json")
+_lock = threading.Lock()
 
 
 def _load_all() -> dict:
@@ -29,14 +32,15 @@ def _load_all() -> dict:
 
 def save_profile(user_id: int, delivery: DeliveryInfo) -> None:
     """Ghi đè thông tin giao hàng cho user_id."""
-    profiles = _load_all()
-    profiles[str(user_id)] = {
-        "name":    delivery.name,
-        "phone":   delivery.phone,
-        "address": delivery.address,
-    }
-    with open(PROFILES_FILE, "w", encoding="utf-8") as f:
-        json.dump(profiles, f, ensure_ascii=False, indent=2)
+    with _lock:
+        profiles = _load_all()
+        profiles[str(user_id)] = {
+            "name":    delivery.name,
+            "phone":   delivery.phone,
+            "address": delivery.address,
+        }
+        with open(PROFILES_FILE, "w", encoding="utf-8") as f:
+            json.dump(profiles, f, ensure_ascii=False, indent=2)
     logger.info("Đã lưu profile cho user %s.", user_id)
 
 

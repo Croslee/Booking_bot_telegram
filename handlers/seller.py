@@ -2,9 +2,10 @@
 handlers/seller.py — Lệnh và callback dành riêng cho người bán.
 
 Lệnh:
-    /history  — 10 đơn hàng gần nhất kèm trạng thái
-    /stats    — thống kê doanh thu hôm nay + tổng
-    /export   — xuất toàn bộ lịch sử dưới dạng .txt và .csv (mở được bằng Excel)
+    /history      — 10 đơn hàng gần nhất kèm trạng thái
+    /stats        — thống kê doanh thu hôm nay + tổng
+    /export       — xuất toàn bộ lịch sử dưới dạng .txt và .csv (mở được bằng Excel)
+    /reloadmenu   — tải lại menu từ Menu.csv mà không cần restart bot
 
 Callback:
     done_<order_id>    — đánh dấu đơn "Đã làm xong"
@@ -20,6 +21,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from config import SELLER_CHAT_ID, SHOP_NAME
+from menu_loader import load_menu
 from order_history import get_order_by_id, get_stats, get_today_orders, load_orders, update_order_status
 
 logger = logging.getLogger(__name__)
@@ -294,3 +296,27 @@ async def _notify_customer_cancelled(context: ContextTypes.DEFAULT_TYPE, order_i
         )
     except Exception:
         logger.warning("Không gửi được thông báo huỷ cho user_id=%s", user_id)
+
+
+# ── /reloadmenu ───────────────────────────────────────────────────────
+
+async def cmd_reload_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Tải lại menu từ Menu.csv mà không cần restart bot."""
+    if not _is_seller(update):
+        await update.message.reply_text("⛔ Lệnh này chỉ dành cho người bán.")
+        return
+
+    try:
+        menu = load_menu()
+        context.bot_data["menu"] = menu
+        total_items = sum(len(items) for items in menu.values())
+        await update.message.reply_text(
+            f"✅ <b>Menu đã được tải lại!</b>\n\n"
+            f"📂 Danh mục: <b>{len(menu)}</b>\n"
+            f"🧋 Tổng số món: <b>{total_items}</b>",
+            parse_mode="HTML",
+        )
+        logger.info("Menu đã được reload bởi seller. %d danh mục, %d món.", len(menu), total_items)
+    except Exception as e:
+        logger.error("Lỗi khi reload menu: %s", e)
+        await update.message.reply_text(f"❌ Lỗi khi tải menu: {e}")

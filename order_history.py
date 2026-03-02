@@ -7,14 +7,17 @@ order_history.py — Module lưu trữ và đọc lịch sử đơn hàng.
 import json
 import logging
 import os
+import threading
 from datetime import datetime
 from typing import Optional
 
+from config import DATA_DIR
 from models import Order
 
 logger = logging.getLogger(__name__)
 
-HISTORY_FILE = os.path.join(os.path.dirname(__file__), "orders.json")
+HISTORY_FILE = os.path.join(DATA_DIR, "orders.json")
+_lock = threading.Lock()  # bảo vệ đọc-ghi file khỏi race condition
 
 
 # ──────────────────────────────────────────────
@@ -58,12 +61,11 @@ def save_order(order: Order) -> None:
     Ghi đơn hàng vào orders.json.
     Nếu file chưa tồn tại thì tạo mới.
     """
-    orders = load_orders()
-    orders.append(_order_to_dict(order))
-
-    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(orders, f, ensure_ascii=False, indent=2)
-
+    with _lock:
+        orders = load_orders()
+        orders.append(_order_to_dict(order))
+        with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+            json.dump(orders, f, ensure_ascii=False, indent=2)
     logger.info("Đã lưu đơn #%s vào lịch sử (%d đơn tổng cộng).",
                 order.order_id, len(orders))
 
@@ -110,15 +112,16 @@ def get_stats() -> dict:
 
 
 def update_order_status(order_id: str, status: str) -> bool:
-    orders = load_orders()
-    for order in orders:
-        if order.get("order_id") == order_id:
-            order["status"] = status
-            order["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-                json.dump(orders, f, ensure_ascii=False, indent=2)
-            logger.info("Don #%s -> trang thai: %s", order_id, status)
-            return True
+    with _lock:
+        orders = load_orders()
+        for order in orders:
+            if order.get("order_id") == order_id:
+                order["status"] = status
+                order["updated_at"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                with open(HISTORY_FILE, "w", encoding="utf-8") as f:
+                    json.dump(orders, f, ensure_ascii=False, indent=2)
+                logger.info("Don #%s -> trang thai: %s", order_id, status)
+                return True
     logger.warning("Khong tim thay don #%s de cap nhat.", order_id)
     return False
 
