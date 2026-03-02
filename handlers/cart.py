@@ -1,7 +1,7 @@
 import logging
 
 from telegram import Update
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, ConversationHandler
 
 from handlers.keyboards import (
     cart_keyboard,
@@ -120,3 +120,12 @@ async def proceed_checkout(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         parse_mode="HTML",
     )
     return COLLECT_NAME
+
+
+async def handle_cart_cancel(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    """Nút ❌ Huỷ đơn trong giỏ hàng — xóa dữ liệu và kết thúc hội thoại."""
+    query = update.callback_query
+    await query.answer()
+    context.user_data.clear()
+    await query.edit_message_text("❌ Đã huỷ đơn. Gõ /start để bắt đầu lại nhé!")
+    return ConversationHandler.END

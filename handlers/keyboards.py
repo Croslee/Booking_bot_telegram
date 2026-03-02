@@ -110,6 +110,7 @@ def cart_keyboard(cart: List[CartItem]) -> InlineKeyboardMarkup:
     ])
     buttons.append([
         InlineKeyboardButton("✅ Đặt hàng", callback_data="cart_checkout"),
+        InlineKeyboardButton("❌ Huỷ đơn", callback_data="cart_cancel"),
     ])
     return InlineKeyboardMarkup(buttons)
 

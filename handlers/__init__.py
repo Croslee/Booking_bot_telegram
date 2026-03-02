@@ -3,6 +3,7 @@
 from handlers.cart import (
     add_more,
     clear_cart,
+    handle_cart_cancel,
     proceed_checkout,
     remove_item,
     view_cart,
@@ -49,6 +50,7 @@ __all__ = [
     "view_cart",
     "remove_item",
     "clear_cart",
+    "handle_cart_cancel",
     "add_more",
     "proceed_checkout",
     "collect_name",

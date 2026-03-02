@@ -41,6 +41,7 @@ from handlers import (
     collect_phone,
     enter_new_address,
     handle_cancel_order,
+    handle_cart_cancel,
     handle_category,
     handle_confirm,
     handle_custom_quantity,
@@ -174,10 +175,11 @@ def build_conversation_handler() -> ConversationHandler:
 
             # ── Giỏ hàng ──
             CART_VIEW: [
-                CallbackQueryHandler(add_more,          pattern="^add_more$"),
-                CallbackQueryHandler(clear_cart,        pattern="^cart_clear$"),
-                CallbackQueryHandler(proceed_checkout,  pattern="^cart_checkout$"),
-                CallbackQueryHandler(remove_item,       pattern="^remove_"),
+                CallbackQueryHandler(add_more,            pattern="^add_more$"),
+                CallbackQueryHandler(clear_cart,          pattern="^cart_clear$"),
+                CallbackQueryHandler(proceed_checkout,    pattern="^cart_checkout$"),
+                CallbackQueryHandler(handle_cart_cancel,  pattern="^cart_cancel$"),
+                CallbackQueryHandler(remove_item,         pattern="^remove_"),
             ],
 
             # ── Hỏi có dùng địa chỉ đã lưu không ──
