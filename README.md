@@ -130,7 +130,7 @@ Sau khi deploy, người bán mở bot và gõ `/start` một lần để Telegr
 ├── order_history.py        # Lưu/đọc orders.json
 ├── user_profiles.py        # Lưu thông tin giao hàng của khách
 ├── generate_qr.py          # Tạo ảnh QR code
-├── test_order_flow.py      # Script test luồng đặt hàng
+├── test_order_flow.py      # Script test luồng đặt hàng (local)
 ├── Menu.csv                # Database menu
 ├── handlers/
 │   ├── start.py            # Lệnh /start

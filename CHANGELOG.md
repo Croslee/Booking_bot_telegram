@@ -18,9 +18,10 @@
 - Thêm lệnh `/reloadmenu` (chỉ seller) — đọc lại `Menu.csv` và cập nhật `bot_data["menu"]` ngay lập tức
 - Phản hồi số danh mục và số món sau khi reload thành công
 
+#### Tối ưu lệnh /qr
 ---
 
-## [1.0.0] — 2026-03-02
+## [1.0.0] — 2026-03-01
 
 Phiên bản đầu tiên hoàn chỉnh, sẵn sàng deploy.
 

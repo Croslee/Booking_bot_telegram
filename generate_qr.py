@@ -101,7 +101,7 @@ def build_branded_image(shop_name: str, bot_url: str) -> Image.Image:
 
 def qr_to_bytes(bot_url: str, shop_name: str) -> io.BytesIO:
     """Tạo QR trong bộ nhớ (dùng cho lệnh /qr trong bot)."""
-    img    = build_branded_image(shop_name, bot_url)
+    img    = build_qr_image(bot_url)
     buffer = io.BytesIO()
     img.save(buffer, format="PNG")
     buffer.seek(0)
