@@ -1,6 +1,8 @@
-# 🧋 Bot Đặt Hàng Trà Sữa — Telegram
+# 🧋 Bot Đặt Đồ Uống — Telegram
 
 Bot Telegram giúp khách đặt hàng trực tiếp qua chat, người bán nhận đơn và xác nhận bằng nút bấm — không cần app riêng, không cần gọi điện.
+
+Video Demo: https://drive.google.com/file/d/1_CWlWL1wFy70lv4vuFjafJz6EjBGSrq2/view?usp=sharing
 
 ---
 
